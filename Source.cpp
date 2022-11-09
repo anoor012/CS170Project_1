@@ -8,10 +8,10 @@
 #include <queue>
 using namespace std;
 
-int expanded = 0;															//Stores nodes expanded
-int maxQueue = 0;															//Gets Max Size
+int expanded = 0;											//Stores nodes expanded
+int maxQueue = 0;											//Gets Max Size
 int SumManhattan_Dist(vector<vector<int>> puzz);							//Calculates total manhattan distance of puzzle		
-int Manhattan_dist(vector<vector<int>> puzz, int x, int y);					//Calcutes manhattan distance of a single index in the puzzle				
+int Manhattan_dist(vector<vector<int>> puzz, int x, int y);						//Calcutes manhattan distance of a single index in the puzzle				
 int MisplacedTiles(vector<vector<int>> puzz);								//Calculates amount of tiles misplaced in puzzle
 void swap(Node* n, int nX, int oX, int nY, int oY);							//Swaps blank spot with valid swappable index/spot in puzzle
 Node* MoveUp(Node* temp);												
@@ -28,10 +28,10 @@ vector<vector<int>> goalState{
 	{7, 8, 0}
 };
 
-struct sortQueue {																	//Sorts Queue by orderning nodes from least to greatest in cost
+struct sortQueue {											//Sorts Queue by orderning nodes from least to greatest in cost
 public:
 	constexpr bool operator()(const Node* a, const Node* b) const noexcept {
-		return a->depth + a->cost > b->depth + b->cost;								//f(n) = g[n] + h[n], g[n] is the distance away from the goal, h[n] is the cost to get to the goal
+		return a->depth + a->cost > b->depth + b->cost;						//f(n) = g[n] + h[n], g[n] is the distance away from the goal, h[n] is the cost to get to the goal
 	}
 
 };
@@ -120,9 +120,9 @@ int MisplacedTiles(vector<vector<int>> puzz) {					//Calculates amount of tiles 
 
 void swap(Node* n, int nX, int oX, int nY, int oY) {			//Swaps blank spot with valid swappable index/spot in puzzle
 
-	int temp = n->s[nX][nY];									//stores coords of non blank number so that we can swap it with the blank
+	int temp = n->s[nX][nY];								//stores coords of non blank number so that we can swap it with the blank
 	n->s[nX][nY] = n->s[oX][oY];								//Swaps blank spot
-	n->s[oX][oY] = temp;										//Puts non blank number back into the old blank spot index
+	n->s[oX][oY] = temp;									//Puts non blank number back into the old blank spot index
 
 	n->blank_x = nX;
 	n->blank_y = nY;
@@ -177,7 +177,7 @@ Node* A_Manhattan(vector<vector<int>> _puzzle) {											//General Search algo
 	
 	Node* curr = nullptr;
 
-	while (!que.empty()) {																	//if empty return 
+	while (!que.empty()) {													//if empty return 
 		curr = que.top();																	//Make curr equal to the puzzle/node that has lowest manhattan distance
 
 		if (que.size() >> maxQueue) {
@@ -186,7 +186,7 @@ Node* A_Manhattan(vector<vector<int>> _puzzle) {											//General Search algo
 
 		que.pop();																			
 
-		if (curr->cost == 0) {																//Check if we are already at the goal state
+		if (curr->cost == 0) {											//Check if we are already at the goal state
 			PrintSolution(curr);
 			cout << "h[n] = " << curr->cost << ", " << "g[n] = " << curr->depth - 1 << endl;
 			return curr;
@@ -194,25 +194,25 @@ Node* A_Manhattan(vector<vector<int>> _puzzle) {											//General Search algo
 
 		expanded += 1;
 
-		if (curr->blank_x != 0) {															//Move Up
+		if (curr->blank_x != 0) {											//Move Up
 			Node* OperatorUp = new Node(curr->s, curr, curr->depth);						//Makes new operator node
 			MoveUp(OperatorUp);																
 			OperatorUp->cost = SumManhattan_Dist(OperatorUp->s);							//Calculate Manhattan cost
-			que.push(OperatorUp);															//Caculate Manhattan cost then push node
+			que.push(OperatorUp);											//Caculate Manhattan cost then push node
 		}
-		if (curr->blank_x != 2) {															//Move Down
+		if (curr->blank_x != 2) {											//Move Down
 			Node* OperatorDown = new Node(curr->s, curr, curr->depth);						//Makes new operator node
 			MoveDown(OperatorDown);
 			OperatorDown->cost = SumManhattan_Dist(OperatorDown->s);
 			que.push(OperatorDown);													
 		}
-		if (curr->blank_y != 0) {															//Move Left
+		if (curr->blank_y != 0) {											//Move Left
 			Node* OperatorLeft = new Node(curr->s, curr, curr->depth);						//Makes new operator node
 			MoveLeft(OperatorLeft);
 			OperatorLeft->cost = SumManhattan_Dist(OperatorLeft->s);	
 			que.push(OperatorLeft);
 		}
-		if (curr->blank_y != 2) {															//Move right
+		if (curr->blank_y != 2) {											//Move right
 			Node* OperatorRight = new Node(curr->s, curr, curr->depth);						//Makes new operator node
 			MoveRight(OperatorRight);
 			OperatorRight->cost = SumManhattan_Dist(OperatorRight->s);
@@ -252,25 +252,25 @@ Node* A_Misplaced(vector<vector<int>> _puzzle) {											//General Search algo
 			return curr;
 		}
 
-		if (curr->blank_x != 0) {															//Move Up
+		if (curr->blank_x != 0) {											//Move Up
 			Node* OperatorUp = new Node(curr->s, curr, curr->depth);						//Makes new operator node
 			MoveUp(OperatorUp);
 			OperatorUp->cost = MisplacedTiles(OperatorUp->s);
 			que.push(OperatorUp);
 		}
-		if (curr->blank_x != 2) {															//Move Down
+		if (curr->blank_x != 2) {											//Move Down
 			Node* OperatorDown = new Node(curr->s, curr, curr->depth);						//Makes new operator node
 			MoveDown(OperatorDown);
 			OperatorDown->cost = MisplacedTiles(OperatorDown->s);
 			que.push(OperatorDown);
 		}
-		if (curr->blank_y != 0) {															//Move Left
+		if (curr->blank_y != 0) {											//Move Left
 			Node* OperatorLeft = new Node(curr->s, curr, curr->depth);						//Makes new operator node
 			MoveLeft(OperatorLeft);
 			OperatorLeft->cost = MisplacedTiles(OperatorLeft->s);
 			que.push(OperatorLeft);
 		}
-		if (curr->blank_y != 2) {															//Move right
+		if (curr->blank_y != 2) {											//Move right
 			Node* OperatorRight = new Node(curr->s, curr, curr->depth);						//Makes new operator node
 			MoveRight(OperatorRight);
 			OperatorRight->cost = MisplacedTiles(OperatorRight->s);
@@ -310,25 +310,25 @@ Node* A_UniformCost(vector<vector<int>> _puzzle) {											//General Search Al
 			return curr;
 		}
 
-		if (curr->blank_x != 0) {															//Move Up
+		if (curr->blank_x != 0) {											//Move Up
 			Node* OperatorUp = new Node(curr->s, curr, curr->depth);						//Makes new operator node
 			MoveUp(OperatorUp);
 			OperatorUp->cost = 0;
 			que.push(OperatorUp);
 		}
-		if (curr->blank_x != 2) {															//Move Down
+		if (curr->blank_x != 2) {											//Move Down
 			Node* OperatorDown = new Node(curr->s, curr, curr->depth);						//Makes new operator node
 			MoveDown(OperatorDown);
 			OperatorDown->cost = 0;
 			que.push(OperatorDown);
 		}
-		if (curr->blank_y != 0) {															//Move Left
+		if (curr->blank_y != 0) {											//Move Left
 			Node* OperatorLeft = new Node(curr->s, curr, curr->depth);						//Makes new operator node
 			MoveLeft(OperatorLeft);
 			OperatorLeft->cost = 0;
 			que.push(OperatorLeft);
 		}
-		if (curr->blank_y != 2) {															//Move right
+		if (curr->blank_y != 2) {											//Move right
 			Node* OperatorRight = new Node(curr->s, curr, curr->depth);						//Makes new operator node
 			MoveRight(OperatorRight);
 			OperatorRight->cost = 0;
